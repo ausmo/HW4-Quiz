@@ -1,7 +1,9 @@
 let startButton = document.querySelector("#start");
 let startScreen = document.querySelector("#startScreen");
 let questionsElement = document.querySelector("#questions");
+let timer = document.querySelector("#timer")
 let currentQuestion = 0;
+let currentTime = 60;
 const questions = [
   {
     questionTitle: "What is red + blue",
@@ -41,7 +43,7 @@ function renderQuestions() {
   let questionTitleEl = document.querySelector("#question-title");
   let choicesEl = document.querySelector("#choices");
   questionTitleEl.textContent = questions[currentQuestion].questionTitle;
-  choicesEl.textContent="";
+  choicesEl.textContent = "";
   for (let i = 0; i < questions[currentQuestion].choices.length; i++) {
     let button = document.createElement("button");
     button.textContent = questions[currentQuestion].choices[i];
@@ -50,11 +52,24 @@ function renderQuestions() {
     choicesEl.appendChild(button);
   }
 }
+
 function startQuiz() {
   console.log("here");
   startScreen.setAttribute("class", "hide");
   questionsElement.removeAttribute("class");
   renderQuestions();
+  startTimer();
 }
 
+function startTimer() {
+
+let countdown = setInterval(() =>{
+  
+  timer.textContent = currentTime
+  currentTime--
+  if(currentTime === 0){
+    clearInterval(countdown)
+  }
+},  1000)
+}
 startButton.onclick = startQuiz;
