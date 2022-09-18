@@ -1,9 +1,10 @@
 let startButton = document.querySelector("#start");
 let startScreen = document.querySelector("#startScreen");
 let questionsElement = document.querySelector("#questions");
-let timer = document.querySelector("#timer")
+let timer = document.querySelector("#timer");
 let currentQuestion = 0;
 let currentTime = 60;
+let countdown;
 const questions = [
   {
     questionTitle: "What is red + blue",
@@ -31,11 +32,35 @@ const questions = [
     answer: "You",
   },
 ];
-
+function endQuiz() {
+  clearInterval(countdown);
+  let endScreenEl=document.querySelector("#endScreen")
+  endScreenEl.removeAttribute("class")
+  let finalScoreEl = document.querySelector("#finalScore")
+  finalScoreEl.textContent=currentTime;
+  questionsElement.setAttribute("class", "hide")
+}
 function checkAnswer() {
   console.log(this.value);
+  console.log(currentQuestion);
+  if (this.value !== questions[currentQuestion].answer) {
+    currentTime = currentTime - 5;
+    if (currentTime < 0) {
+      currentTime = 0;
+    }
+    timer.textContent = currentTime;
+  }
   if (this.value === questions[currentQuestion].answer) {
+    if (currentTime < 0) {
+      currentTime = 0;
+    }
+    timer.textContent = currentTime;
     currentQuestion++;
+    renderQuestions();
+  }
+  if (currentTime <= 0 || currentQuestion === questions.length -1) {
+    endQuiz();
+  } else {
     renderQuestions();
   }
 }
@@ -62,14 +87,12 @@ function startQuiz() {
 }
 
 function startTimer() {
-
-let countdown = setInterval(() =>{
-  
-  timer.textContent = currentTime
-  currentTime--
-  if(currentTime === 0){
-    clearInterval(countdown)
-  }
-},  1000)
+  countdown = setInterval(() => {
+    timer.textContent = currentTime;
+    currentTime--;
+    if (currentTime === 0) {
+      clearInterval(countdown);
+    }
+  }, 1000);
 }
 startButton.onclick = startQuiz;
